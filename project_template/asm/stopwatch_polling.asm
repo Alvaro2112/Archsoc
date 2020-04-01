@@ -25,11 +25,11 @@ main_loop:
 add a0, zero,t1
 
 call display
-;call wait
-;call wait
-;call wait
-;call wait
-;call wait
+call wait
+call wait
+call wait
+call wait
+call wait
 
 addi t1 , t1,1 
 
