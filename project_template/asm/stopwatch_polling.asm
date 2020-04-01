@@ -23,16 +23,37 @@ addi t1, zero, 0
 main_loop:
 
 add a0, zero,t1
+
 call display
+call wait
+call wait
+call wait
+call wait
 call wait
 
 addi t1 , t1,1 
+
+ldw t2, BUTTON + 4(r0)
+andi t2, t2, 1
+bne t2, r0, button
+
 jmpi main_loop
+
+button:
+addi sp, sp, -8
+stw t1, 0(sp)
+stw t2, 4(sp)
+call spend_time
+ldw t2, 4(sp)
+ldw t1, 0(sp)
+addi sp, sp, 8
+stw r0, BUTTON+4(r0)
+ret
 
 ; BEGIN:wait
 wait:
 addi t0, r0, 1 ;
-slli t0, t0, 19 ;; init couter to 2 power 19
+slli t0, t0, 17 ;; init couter to 2 power 19
 
 wait_helper:
 addi t0, t0, -1 ;; decrease counter
