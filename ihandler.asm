@@ -15,18 +15,16 @@ stw t1, 4(sp)
 stw ra, 8(sp)
 
 rdctl t0, ctl4
-
-
 ;test le 3ieme bit 
-
 andi t1, t0, 0b100
+
 beq zero, t1 , int_timer 
 call isr_button
 
 ;test le premier bit 
 
 int_timer:
-andi t1,t0,1 
+andi t1, t0, 1 
 beq t1,zero, int_fin
 call isr_timer
 
@@ -34,7 +32,7 @@ call isr_timer
 
 int_fin:
 
-stw t0 , LEDS0(zero)
+
 
 ldw t0, 0(sp)
 ldw t1, 4(sp)
@@ -53,6 +51,7 @@ stw t1, 4(sp)
 stw ra, 8(sp) 
 
 ldw t0, EDGECAPTURE(zero)
+stw r0, EDGECAPTURE(zero)
 ;prend la valeur des deux premiers button
 andi t1 , t0, 1
 andi t2, t0, 2
@@ -76,9 +75,9 @@ stw t0, 0(sp)
 stw t1, 4(sp)
 stw ra, 8(sp) 
 
-ldw t0 , LEDS1(zero)
+ldw t0 , LEDS2(zero)
 addi t0 , t0, 1
-stw t0 , LEDS1(zero)
+stw t0 , LEDS2(zero)
 ;
 ldw t0, 0(sp)
 ldw t1, 4(sp)
@@ -114,7 +113,7 @@ add t0, zero,zero
 loop:
 
 addi t0,t0,1
-stw t0, LEDS2(zero)
+stw t0, LEDS1(zero)
 
 
 br loop
