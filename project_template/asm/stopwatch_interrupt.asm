@@ -22,9 +22,11 @@ main:
 addi sp,zero, 0x1500
 
 addi s0,zero,0
+
 ; enable les deux interrupts dont on se sert
 ori t1 , zero,0b101
 wrctl ctl3, t1
+
 ; enable les interrupt  du pie
 addi t1, zero,1
 wrctl ctl0, t1
@@ -34,16 +36,16 @@ addi t0, zero, 0x4C
 slli t0, t0, 16
 addi t0, t0, 0x4B40
 stw t0, TIMER + 4(zero) 
-addi t0,zero, 11
+addi t0, zero, 11
 stw t0, TIMER + 8(zero)
 ;------------
 
 main_loop:
-br main_loop
+jmpi main_loop
 
 
 interrupt_handler:
-    ; WRITE YOUR INTERRUPT HANDLER HERE
+; WRITE YOUR INTERRUPT HANDLER HERE
 
 addi sp, sp ,-8
 stw t0, 0(sp)
