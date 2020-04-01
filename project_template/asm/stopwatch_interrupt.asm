@@ -47,16 +47,15 @@ jmpi main_loop
 interrupt_handler:
 ; WRITE YOUR INTERRUPT HANDLER HERE
 
-addi sp, sp ,-8
+addi sp, sp ,-12
 stw t0, 0(sp)
 stw t1, 4(sp)
+stw ra, 8(sp)
 
 rdctl t0 ,ctl4 ; prends les pendings 
-
-
 andi t1, t0,1 ; check si interrupt timer
 
-beq t1,zero, do_button ;go a button si c psa timer
+beq t1, zero, do_button ;go a button si c psa timer
 
 
 add a0,s0,zero
@@ -69,9 +68,11 @@ br int_fin
 do_button:
 
 andi t1, t0, 0b100
-
 beq t1,zero, int_fin
-ldw t1 , BUTTON+4(zero)
+
+wrctl ctl4, r0
+stw t1 , BUTTON + 4(zero)
+
 add s0, zero,zero
 
 andi t1, t1 ,0b1
@@ -86,8 +87,9 @@ int_fin:
 stw zero, BUTTON+4(zero)
 ldw t0, 0(sp)
 ldw t1, 4(sp)
+ldw ra, 8(sp)
 
-addi sp,sp,8
+addi sp,sp,12
 addi ea,ea, -4
 eret
 
