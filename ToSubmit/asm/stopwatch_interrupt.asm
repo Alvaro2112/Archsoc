@@ -17,77 +17,89 @@ main:
 ; DO NOT CHANGE ANYTHING ABOVE THIS LINE
 ; <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
-    ; WRITE YOUR CONSTANT DEFINITIONS AND main HERE
-    addi 	sp, zero, 0x1FFF
-	addi	t0,	zero, 1
-	wrctl	status, t0				;enabling interrupts
-	addi 	t0, zero, 5				
-	wrctl	ienable, t0				;enabling interrupts from Timer and buttons
-	addi	t0, zero, 0x4C
-	slli	t0, t0, 16
-	addi 	t0, t0, 0x4B40
-	stw		t0, TIMER + 8(zero)		;sets timer period to 5'000'000
-	addi	t0, zero, 7
-	stw 	t0, TIMER+4(zero)		;start the timer and set continue
-    stw		zero, RAM+4(zero)
-	stw		zero, RAM+8(zero)
-    
+ ; WRITE YOUR CONSTANT DEFINITIONS AND main HERE
+;initialise le stack pointer dans la ram
+addi sp,zero, 0x1500
 
-loop:
-    ldw 	a0, RAM+4(zero)
-    call display
-	ldw		t0, RAM+8(zero)
-	beq 	t0, zero, loop
-	call 	spend_time
-	stw		zero, RAM+8(zero)
-    br loop
+addi s0,zero,0
 
+; enable les deux interrupts dont on se sert
+ori t1 , zero,0b101
+wrctl ctl3, t1
+
+; enable les interrupt  du pie
+addi t1, zero,1
+wrctl ctl0, t1
+
+; PERSONNE SAIT ---------- changer le 8
+addi t0, zero, 0x4C
+slli t0, t0, 16
+addi t0, t0, 0x4B40
+stw t0, TIMER + 4(zero)
+addi t0, zero, 11
+stw t0, TIMER + 8(zero)
+;------------
+
+main_loop:
+
+
+
+jmpi main_loop
 
 
 interrupt_handler:
-    addi	sp, sp, -20
-    stw		s0, 16(sp)
-    stw		t0, 12(sp)
-    stw		t1, 8(sp)
-    stw		t2, 4(sp)
-    stw 	t3, 0(sp)
+; WRITE YOUR INTERRUPT HANDLER HERE
 
-;look if the timer request an interrupt
-timer_check:
-    rdctl	s0, ipending
-    andi	t1, s0, 1			;isolating timer interrupts
-    addi	t2, zero, 1			;t2 = 1
-    bne		t1, t2,  button_check
+addi sp, sp ,-12
+stw t0, 0(sp)
+stw t1, 4(sp)
+stw ra, 8(sp)
 
-timer_irs:
-    ldw		t3, RAM+4(zero)
-	addi 	t3, t3, 1
-	stw		t3, RAM+4(zero)
-	stw		zero, TIMER(zero)	; write 0 in the status register (add = 0) in the TIMER to ACK the IRQ and reset it 
-    
+rdctl t0 ,ctl4 ; prends les pendings
+andi t1, t0,1 ; check si interrupt timer
 
-;look if the button request an interrupt
-button_check:
-    andi	t1, s0, 4			;isolating button interrupts
-    addi 	t2, zero, 4			;t2 = 4
-    bne 	t1, t2, continue
-	ldw		t1, BUTTON+4(zero)
-	andi	t1, t1, 1
-	beq		t1, zero, continue		
-	addi	t3, zero, 1
-    stw 	t3, RAM+8(zero)
-	
+beq t1, zero, do_button ;go a button si c psa timer
 
-continue:	
-	stw		zero, BUTTON+4(zero)
-    ldw		s0, 16(sp)
-    ldw		t0, 12(sp)
-    ldw		t1, 8(sp)
-    ldw		t2, 4(sp)
-    ldw		t3, 0(sp)
-    addi	sp, sp, 20
-    addi	ea, ea, -4
-    eret
+
+
+do_timer:
+
+addi s0 ,s0,1
+
+stw zero, TIMER+12(zero)
+add a0,s0,zero
+call display
+br int_fin
+
+
+do_button:
+
+ldw t1, BUTTON+4(zero)
+andi t1 ,t1, 0b1
+beq zero, t1, int_fin
+
+wrctl ctl4, r0
+call spend_time
+stw zero, BUTTON+4(zero)
+
+
+; reactiver les int ???
+
+
+int_fin:
+
+
+ldw t0, 0(sp)
+ldw t1, 4(sp)
+ldw ra, 8(sp)
+
+addi sp,sp,12
+addi ea,ea, -4
+eret
+
+
+
+
 
 ; <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 ; DO NOT CHANGE ANYTHING BELOW THIS LINE
@@ -253,3 +265,5 @@ font_data:
     .word 0x3C427E00 ; D
     .word 0x424A7E00 ; E
     .word 0x020A7E00 ; F
+
+
