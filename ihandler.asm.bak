@@ -61,6 +61,7 @@ ldw t0, LEDS0(zero)
 add t0, t0, t1
 sub t0, t0, t2
 stw t0 , LEDS0(zero)
+stw r0 , TIMER+12(zero)
 
 ldw t0, 0(sp)
 ldw t1, 4(sp)
@@ -78,7 +79,9 @@ stw ra, 8(sp)
 ldw t0 , LEDS2(zero)
 addi t0 , t0, 1
 stw t0 , LEDS2(zero)
-;
+stw r0, TIMER(r0)
+
+
 ldw t0, 0(sp)
 ldw t1, 4(sp)
 ldw ra, 8(sp)
@@ -99,11 +102,11 @@ ori t1 , zero,0b101
 wrctl ctl3, t1
 
 ; enable les interrupt  du pie
-addi t1, zero,1
+addi t1, zero, 1
 wrctl ctl0, t1
 
 ; mettre la period
-addi t0, zero, 999
+addi t0, zero, 9999
 stw t0, TIMER+4(zero)
 
 ;mettre le control
@@ -115,6 +118,7 @@ add t0, zero,zero
 
 loop:
 
+ldw t0, LEDS1(zero)
 addi t0,t0,1
 stw t0, LEDS1(zero)
 
