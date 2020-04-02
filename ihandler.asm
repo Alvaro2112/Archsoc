@@ -4,10 +4,10 @@
 .equ TIMER, 0x2020
 .equ EDGECAPTURE, 0x2034
 
-_start
+_start:
 br main ; jump to the main function
 
-interrupt_handler
+interrupt_handler:
 
 addi sp, sp, -12
 stw t0, 0(sp)
@@ -23,14 +23,14 @@ call isr_button
 
 ;test le premier bit
 
-int_timer
+int_timer:
 andi t1, t0, 1
 beq t1,zero, int_fin
 call isr_timer
 
 ;fin de l'handler
 
-int_fin
+int_fin:
 
 
 
@@ -43,7 +43,7 @@ addi ea, ea ,-4
 eret
 
 
-isr_button
+isr_button:
 
 addi sp, sp, -12
 stw t0, 0(sp)
@@ -68,7 +68,7 @@ ldw ra, 8(sp)
 addi sp,sp, 12
 ret
 
-isr_timer
+isr_timer:
 
 addi sp, sp, -12
 stw t0, 0(sp)
@@ -88,7 +88,7 @@ addi sp,sp, 12
 ret
 
 
-main
+main:
 stw        zero, LEDS0(zero)            ;initialize counters
 stw        zero, LEDS1(zero)
 stw        zero, LEDS2(zero)
@@ -118,7 +118,7 @@ stw t0, TIMER+8(zero)
 ;counter pour la main loop
 add t0, zero,zero
 
-loop
+loop:
 
 addi t0,t0,1
 stw t0, LEDS1(zero)
