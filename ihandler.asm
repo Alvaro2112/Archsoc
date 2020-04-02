@@ -2,12 +2,12 @@
 .equ LEDS1, 0x2004
 .equ LEDS2, 0x2008
 .equ TIMER, 0x2020
-.equ EDGECAPTURE, 0x2034 
+.equ EDGECAPTURE, 0x2034
 
-_start:
+_start
 br main ; jump to the main function
 
-interrupt_handler:
+interrupt_handler
 
 addi sp, sp, -12
 stw t0, 0(sp)
@@ -15,22 +15,22 @@ stw t1, 4(sp)
 stw ra, 8(sp)
 
 rdctl t0, ctl4
-;test le 3ieme bit 
+;test le 3ieme bit
 andi t1, t0, 0b100
 
-beq zero, t1 , int_timer 
+beq zero, t1 , int_timer
 call isr_button
 
-;test le premier bit 
+;test le premier bit
 
-int_timer:
-andi t1, t0, 1 
+int_timer
+andi t1, t0, 1
 beq t1,zero, int_fin
 call isr_timer
 
 ;fin de l'handler
 
-int_fin:
+int_fin
 
 
 
@@ -43,12 +43,12 @@ addi ea, ea ,-4
 eret
 
 
-isr_button:
+isr_button
 
 addi sp, sp, -12
 stw t0, 0(sp)
 stw t1, 4(sp)
-stw ra, 8(sp) 
+stw ra, 8(sp)
 
 ldw t0, EDGECAPTURE(zero)
 stw r0, EDGECAPTURE(zero)
@@ -61,7 +61,6 @@ ldw t0, LEDS0(zero)
 add t0, t0, t1
 sub t0, t0, t2
 stw t0 , LEDS0(zero)
-stw r0 , TIMER+12(zero)
 
 ldw t0, 0(sp)
 ldw t1, 4(sp)
@@ -69,19 +68,19 @@ ldw ra, 8(sp)
 addi sp,sp, 12
 ret
 
-isr_timer:
+isr_timer
 
 addi sp, sp, -12
 stw t0, 0(sp)
 stw t1, 4(sp)
-stw ra, 8(sp) 
+stw ra, 8(sp)
 
 ldw t0 , LEDS2(zero)
 addi t0 , t0, 1
 stw t0 , LEDS2(zero)
-stw r0, TIMER(r0)
 
-
+stw zero, TIMER+12(zero)
+;
 ldw t0, 0(sp)
 ldw t1, 4(sp)
 ldw ra, 8(sp)
@@ -89,10 +88,10 @@ addi sp,sp, 12
 ret
 
 
-main:
-stw		zero, LEDS0(zero)			;initialize counters
-stw		zero, LEDS1(zero)
-stw		zero, LEDS2(zero)
+main
+stw        zero, LEDS0(zero)            ;initialize counters
+stw        zero, LEDS1(zero)
+stw        zero, LEDS2(zero)
 
 ;initialise le stack pointer dans la ram
 addi sp,zero, 0x1500
@@ -102,11 +101,14 @@ ori t1 , zero,0b101
 wrctl ctl3, t1
 
 ; enable les interrupt  du pie
-addi t1, zero, 1
+addi t1, zero,1
 wrctl ctl0, t1
 
 ; mettre la period
-addi t0, zero, 9999
+addi    t0, zero, 999
+
+
+
 stw t0, TIMER+4(zero)
 
 ;mettre le control
@@ -116,9 +118,8 @@ stw t0, TIMER+8(zero)
 ;counter pour la main loop
 add t0, zero,zero
 
-loop:
+loop
 
-ldw t0, LEDS1(zero)
 addi t0,t0,1
 stw t0, LEDS1(zero)
 
