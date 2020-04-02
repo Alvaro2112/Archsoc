@@ -75,9 +75,9 @@ stw t0, 0(sp)
 stw t1, 4(sp)
 stw ra, 8(sp)
 
-ldw t0 , LEDS2(zero)
+ldw t0 , LEDS1(zero)
 addi t0 , t0, 1
-stw t0 , LEDS2(zero)
+stw t0 , LEDS1(zero)
 
 stw zero, TIMER+12(zero)
 ;
@@ -104,13 +104,14 @@ wrctl ctl3, t1
 addi t1, zero,1
 wrctl ctl0, t1
 
-; mettre la period
+; mettre la period;;;;;;;
 addi    t0, zero, 999
 
 
 
-stw t0, TIMER+4(zero)
 
+stw t0, TIMER+4(zero)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;mettre le control
 ori t0,zero,0b1011
 stw t0, TIMER+8(zero)
@@ -121,7 +122,7 @@ add t0, zero,zero
 loop:
 
 addi t0,t0,1
-stw t0, LEDS1(zero)
+stw t0, LEDS2(zero)
 
 
 br loop
