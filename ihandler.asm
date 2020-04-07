@@ -33,7 +33,6 @@ call isr_timer
 int_fin:
 
 
-
 ldw t0, 0(sp)
 ldw t1, 4(sp)
 ldw ra ,8(sp)
@@ -58,8 +57,8 @@ andi t2, t0, 2
 srli t2,t2, 1
 
 ldw t0, LEDS0(zero)
-add t0, t0, t1
-sub t0, t0, t2
+add t0, t0, t2
+sub t0, t0, t1
 stw t0 , LEDS0(zero)
 
 ldw t0, 0(sp)
