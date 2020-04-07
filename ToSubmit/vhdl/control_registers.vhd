@@ -40,7 +40,7 @@ write_clk: process(clk, reset_n, write_n)
         elsif(rising_edge(clk) and reset_n = '1') then
             if(backup_n /= '1') then
                 s_stat <= '0';                
-s_estat <= s_stat;
+                s_estat <= s_stat;
             end if;
             if(restore_n /= '1') then
                 s_stat <= s_estat;
