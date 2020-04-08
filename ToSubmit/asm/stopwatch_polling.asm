@@ -1,3 +1,7 @@
+final polling
+Boeshertz Gauthier Henri
+Today, 15:58
+Caudéran Alvaro
 .equ    RAM, 0x1000
 .equ    LEDs, 0x2000
 .equ    TIMER, 0x2020
@@ -24,12 +28,53 @@ main_loop:
 
 add a0, zero,t1
 
+call wait
+call wait
+call wait
+call wait
+call wait
+call wait
+call wait
+call wait
+call wait
+call wait
+call wait
+call wait
+call wait
+call wait
+call wait
+call wait
+call wait
+call wait
+call wait
+call wait
+call wait
+call wait
+call wait
+call wait
+call wait
+call wait
+call wait
+call wait
+call wait
+call wait
+call wait
+call wait
+call wait
+call wait
+call wait
+call wait
+call wait
+call wait
+call wait
+call wait
+call wait
+call wait
+call wait
+call wait
+
+
 call display
-call wait
-call wait
-call wait
-call wait
-call wait
 
 addi t1 , t1,1 
 
@@ -51,16 +96,17 @@ ldw t1, 0(sp)
 addi sp, sp, 8
 stw r0, BUTTON+4(r0)
 
+addi t1,t1,9
 ret
 
 ; BEGIN:wait
 wait:
-addi t0, r0, 1 ;
-slli t0, t0, 17 ;; init couter to 2 power 19
+addi t0,r0,1
+slli t0,t0,14
 
 wait_helper:
 addi t0, t0, -1 ;; decrease counter
-bne r0, t0, wait_helper;
+bge t0, r0, wait_helper;
 ret
 
 ; END:wait
@@ -189,7 +235,7 @@ spend_time:
     add t1, t0, t1
 
 spend_time_loop:
-	addi   t1, t1, -1
+addi   t1, t1, -1
     bne    t1, zero, spend_time_loop
     
     call flip_leds
@@ -230,4 +276,3 @@ font_data:
     .word 0x3C427E00 ; D
     .word 0x424A7E00 ; E
     .word 0x020A7E00 ; F
-

@@ -64,11 +64,12 @@ beq t1, zero, do_button ;go a button si c psa timer
 
 do_timer:
 
-addi s0 ,s0,1
 
 stw zero, TIMER+12(zero)
 add a0,s0,zero
 call display
+
+addi s0 ,s0,1
 br int_fin
 
 
@@ -80,6 +81,7 @@ beq zero, t1, int_fin
 
 wrctl ctl4, r0
 call spend_time
+addi s0,s0,9
 stw zero, BUTTON+4(zero)
 
 
@@ -265,5 +267,3 @@ font_data:
     .word 0x3C427E00 ; D
     .word 0x424A7E00 ; E
     .word 0x020A7E00 ; F
-
-
