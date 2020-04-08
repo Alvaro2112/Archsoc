@@ -1,7 +1,3 @@
-final polling
-Boeshertz Gauthier Henri
-Today, 15:58
-Caudéran Alvaro
 .equ    RAM, 0x1000
 .equ    LEDs, 0x2000
 .equ    TIMER, 0x2020
